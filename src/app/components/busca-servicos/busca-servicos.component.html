@@ -1,0 +1,65 @@
+<div class="container my-5">
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary">Encontre Prestadores de Serviços</h1>
+    <p class="lead text-muted">A solução ideal para reparos, instalações e serviços gerais no seu bairro.</p>
+  </div>
+
+  <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+    <div class="row g-3">
+      <div class="col-md-5">
+        <label class="form-label fw-bold">O que você precisa?</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+          <input type="text" [(ngModel)]="termoBusca" class="form-control" placeholder="Ex: Eletricista, Pintor...">
+        </div>
+      </div>
+      <div class="col-md-5">
+        <label class="form-label fw-bold">Em qual bairro?</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+          <input type="text" [(ngModel)]="bairroBusca" class="form-control" placeholder="Ex: Centro, Vila Nova...">
+        </div>
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button (click)="pesquisar()" class="btn btn-primary w-100 py-2 fw-bold">
+          Buscar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="mb-4 text-secondary" *ngIf="prestadores.length > 0">Profissionais Encontrados:</h3>
+  
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col" *ngFor="let prestador of prestadores">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="badge bg-info text-dark fw-bold text-uppercase">
+              {{ prestador.categoria }}
+            </span>
+            <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger"></i> {{ prestador.bairro }}</small>
+          </div>
+          
+          <h5 class="card-title fw-bold text-dark">{{ prestador.categoria }}</h5>
+          <p class="card-text text-muted small">{{ prestador.descricao }}</p>
+          <hr>
+          
+          <p class="card-text mb-1">
+            <small class="text-muted">Profissional:</small> <strong>{{ prestador.usuarios?.nome }}</strong>
+          </p>
+        </div>
+        
+        <div class="card-footer bg-transparent border-0 pb-3">
+          <a [href]="'https://wa.me/55' + prestador.telefone" target="_blank" class="btn btn-success w-100 fw-bold">
+            <i class="bi bi-whatsapp me-2"></i> Entrar em Contato
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning text-center shadow-sm" *ngIf="prestadores.length === 0">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> Nenhum prestador listado no momento. Digite os filtros e clique em Buscar!
+  </div>
+</div>

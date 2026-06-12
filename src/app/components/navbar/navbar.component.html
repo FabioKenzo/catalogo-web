@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-4" href="/">
+      <i class="bi bi-search-heart-fill me-2"></i>CatálogoWeb
+    </a>
+    
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [ngClass]="{ 'show': menuAberto }" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active fw-semibold" href="/"><i class="bi bi-house-door me-1"></i>Início</a>
+        </li>
+        
+        <li class="nav-item" *ngIf="isPrestador()">
+          <a class="nav-link fw-semibold text-warning" href="/meu-servico">
+            <i class="bi bi-briefcase me-1"></i>Meu Serviço
+          </a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center">
+        
+        <div *ngIf="!estaLogado()">
+          <a href="/login" class="btn btn-outline-light me-2 fw-bold text-decoration-none">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+          </a>
+          <a href="/cadastro" class="btn btn-light fw-bold text-primary text-decoration-none shadow-sm">
+            Criar Conta
+          </a>
+        </div>
+
+        <div *ngIf="estaLogado()" class="d-flex align-items-center text-white">
+          <span class="me-3 fw-medium">
+            <i class="bi bi-person-circle me-1 fs-5 align-middle"></i>Olá, <strong class="text-warning">{{ getNomeUsuario() }}</strong>
+          </span>
+          <button (click)="logout()" class="btn btn-danger btn-sm fw-bold shadow-sm">
+            <i class="bi bi-box-arrow-right me-1"></i>Sair
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</nav>

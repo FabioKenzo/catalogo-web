@@ -1,0 +1,66 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow border-0 p-4 bg-white rounded">
+        <div class="card-body">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary"><i class="bi bi-person-plus-fill me-2"></i>Criar Conta</h2>
+            <p class="text-muted text-center">Cadastre-se para começar a usar a nossa plataforma.</p>
+          </div>
+
+          <form>
+            <!-- Campo Nome -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nome Completo</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                <input type="text" [(ngModel)]="usuario.nome" name="nome" class="form-control" placeholder="Digite seu nome completo" required>
+              </div>
+            </div>
+
+            <!-- Campo Email -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">E-mail</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                <input type="email" [(ngModel)]="usuario.email" name="email" class="form-control" placeholder="exemplo@email.com" required>
+              </div>
+            </div>
+
+            <!-- Campo Senha -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Senha</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                <input type="password" [(ngModel)]="usuario.senha" name="senha" class="form-control" placeholder="Crie uma senha segura" required>
+              </div>
+            </div>
+
+            <!-- Campo Tipo de Perfil (O Pulo do Gato) -->
+            <div class="mb-4">
+              <label class="form-label fw-bold">O que você deseja fazer?</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-briefcase"></i></span>
+                <select [(ngModel)]="usuario.tipoPerfil" name="tipoPerfil" class="form-select" required>
+                  <option value="" disabled selected>Escolha seu perfil...</option>
+                  <option value="CONSUMIDOR">Quero apenas procurar por serviços (Consumidor)</option>
+                  <option value="PRESTADOR">Quero divulgar o meu trabalho (Prestador)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Botão Cadastrar -->
+            <button type="button" (click)="cadastrar()" class="btn btn-primary w-100 py-2 fw-bold mb-3">
+              Concluir Cadastro
+            </button>
+
+            <!-- Link para ir para a tela de Login -->
+            <div class="text-center">
+              <p class="mb-0 text-muted">Já tem uma conta? <a href="/login" class="text-decoration-none fw-bold">Faça Login</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

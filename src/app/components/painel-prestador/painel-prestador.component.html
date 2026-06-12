@@ -1,0 +1,87 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white text-center py-3">
+          <h3 class="mb-0">Configurações do seu Serviço</h3>
+          <p class="mb-0 small text-white-50">Mantenha seus dados atualizados para ser encontrado na busca</p>
+        </div>
+        
+        <div class="card-body p-4">
+          <form (ngSubmit)="salvarServico()">
+            
+            <div class="mb-3">
+              <label for="categoria" class="form-label fw-bold">O que você faz? (Sua Especialidade)</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-briefcase"></i></span>
+                <input 
+                  type="text" 
+                  id="categoria"
+                  name="categoria" 
+                  [(ngModel)]="categoria" 
+                  class="form-control" 
+                  placeholder="Ex: Pedreiro, Faxineira, Eletricista, Pintor..." 
+                  required>
+              </div>
+              <div class="form-text text-muted">Digite o termo principal pelo qual os clientes vão te buscar.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="bairro" class="form-label fw-bold">Em qual bairro você atende?</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+                <input 
+                  type="text" 
+                  id="bairro"
+                  name="bairro" 
+                  [(ngModel)]="bairro" 
+                  class="form-control" 
+                  placeholder="Ex: Estiva, Centro, Vila Nova..." 
+                  required>
+              </div>
+              <div class="form-text text-muted">Informe o bairro base onde você presta seus serviços.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="telefone" class="form-label fw-bold">Telefone de Contato / WhatsApp</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-whatsapp"></i></span>
+                <input 
+                  type="text" 
+                  id="telefone"
+                  name="telefone" 
+                  [(ngModel)]="telefone" 
+                  class="form-control" 
+                  placeholder="Ex: (12) 99999-9999" 
+                  required>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="descricao" class="form-label fw-bold">Descrição dos seus Serviços</label>
+              <textarea 
+                id="descricao"
+                name="descricao" 
+                [(ngModel)]="descricao" 
+                class="form-control" 
+                rows="4" 
+                placeholder="Fale um pouco sobre sua experiência, horários de atendimento, ferramentas que utiliza ou diferenciais do seu trabalho..." 
+                required></textarea>
+            </div>
+
+            <hr class="text-muted my-4">
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success btn-lg py-2 fw-bold shadow-sm">
+                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Salvar Dados do Serviço
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
