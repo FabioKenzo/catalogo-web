@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class ApiService {
 
   // URL base para facilitar as chamadas das APIs
-  private baseUrl = 'https://catalogoservicos.onrender.com';
+  private baseUrl = 'https://catalogoservicos.onrender.com/api';
 
   constructor(private http: HttpClient) { }
 
