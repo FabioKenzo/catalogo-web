@@ -20,28 +20,25 @@ export class BuscaServicosComponent {
 
   constructor(private apiService: ApiService) {}
 
-pesquisar(): void {
-  // Força o teclado do celular a fechar
-  (document.activeElement as HTMLElement)?.blur();
+  pesquisar(): void {
+    // Força o teclado do celular (iOS/Android) a fechar na hora do clique
+    (document.activeElement as HTMLElement)?.blur();
 
-  // O .trim() remove os espaços extras do iPhone automaticamente!
-  const termoLimpo = this.termoBusca ? this.termoBusca.trim() : '';
-  const bairroLimpo = this.bairroBusca ? this.bairroBusca.trim() : '';
+    // Remove espaços em branco extras que o teclado do iPhone joga nas pontas
+    const termoLimpo = this.termoBusca ? this.termoBusca.trim() : '';
+    const bairroLimpo = this.bairroBusca ? this.bairroBusca.trim() : '';
 
-  // Pode deixar esse alert se quiser ver limpando, depois é só apagar
-  alert(`[DEBUG] Corrigido -> Termo: "${termoLimpo}" | Bairro: "${bairroLimpo}"`);
-
-  // Passa as variáveis limpas para a API
-  this.apiService.buscarServicos(termoLimpo, bairroLimpo).subscribe({
-    next: (dados: any[]) => { 
-      this.prestadores = dados;
-      this.pesquisaFeita = true;
-      console.log('Resultados encontrados no Java:', dados);
-    },
-    error: (err: any) => {
-      console.error('Erro ao conectar com o servidor backend:', err);
-      alert('Erro ao conectar com o servidor backend.');
-    }
-  });
-}
+    // Envia os dados perfeitamente limpos para a API Java
+    this.apiService.buscarServicos(termoLimpo, bairroLimpo).subscribe({
+      next: (dados: any[]) => { 
+        this.prestadores = dados;
+        this.pesquisaFeita = true;
+        console.log('Resultados encontrados no Java:', dados);
+      },
+      error: (err: any) => {
+        console.error('Erro ao conectar com o servidor backend:', err);
+        alert('Erro ao conectar com o servidor backend.');
+      }
+    });
+  }
 }
