@@ -1,26 +1,34 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/api.service'; 
+import { ApiService, UsuarioDTO } from '../../services/api.service'; 
 import { Router } from '@angular/router';
+
+//Interface específica para cadastro
+interface UsuarioCadastro {
+  nome: string;
+  email: string;
+  senha: string;
+  tipoPerfil: string;
+}
 
 @Component({
   selector: 'app-cadastro',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './cadastro.component.html',
-  styleUrl: './cadastro.component.css'
+  styleUrls: ['./cadastro.component.css']
 })
 export class CadastroComponent {
 
-  usuario = {
+
+  usuario: UsuarioCadastro = {
     nome: '',
     email: '',
     senha: '',
-    tipoPerfil: '' 
+    tipoPerfil: ''
   };
 
-  // Injetando o ApiService e o Router 
   constructor(private apiService: ApiService, private router: Router) {}
 
   cadastrar(): void {
@@ -31,23 +39,24 @@ export class CadastroComponent {
 
     console.log('Tentando cadastrar usuário...');
 
-    // Chamada real para o backend Spring 
+    //Envia UsuarioCadastro e recebe UsuarioDTO
     this.apiService.cadastrarUsuario(this.usuario).subscribe({
-      next: (resposta) => {
+      next: (resposta: UsuarioDTO) => {
         console.log('Usuário cadastrado com sucesso no banco!');
-        alert(`Conta criada com sucesso como ${this.usuario.tipoPerfil}!`);
-        
-        // Redirecionamento inteligente baseado no perfil mapeado
-        if (this.usuario.tipoPerfil === 'PRESTADOR') {
-         
-          this.router.navigate(['/']); 
+        alert(`Conta criada com sucesso como ${resposta.tipoPerfil}!`);
+
+        //guarda os dados retornados 
+        localStorage.setItem('usuarioLogado', JSON.stringify(resposta));
+
+        // Redirecionamento baseado no perfil confirmado pelo backend
+        if (resposta.tipoPerfil === 'PRESTADOR') {
+          this.router.navigate(['/']);
         } else {
-          this.router.navigate(['/']); // Consumidor volta direto para a home de busca
+          this.router.navigate(['/']);
         }
       },
       error: (err) => {
         console.error('Erro ao cadastrar no Java:', err);
-        
         alert('Erro ao cadastrar: ' + (err.error || 'Erro interno do servidor.'));
       }
     });

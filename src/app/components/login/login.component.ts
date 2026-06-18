@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
+import { ApiService, UsuarioDTO } from '../../services/api.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -31,7 +31,7 @@ export class LoginComponent {
 
     // Chamando o método no service
     this.apiService.login(this.dadosLogin).subscribe({
-      next: (usuarioLogado) => {
+      next: (usuarioLogado: UsuarioDTO) => {
         console.log('Login efetuado com sucesso!');
         alert(`Bem-vindo de volta, ${usuarioLogado.nome}!`);
         

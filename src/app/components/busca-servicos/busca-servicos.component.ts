@@ -1,21 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
+import { ApiService, ServicoDTO } from '../../services/api.service'; 
 
 @Component({
   selector: 'app-busca-servicos',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './busca-servicos.component.html',
-  styleUrl: './busca-servicos.component.css'
+  styleUrls: ['./busca-servicos.component.css']
 })
 export class BuscaServicosComponent {
 
   termoBusca: string = '';
   bairroBusca: string = '';
 
-  prestadores: any[] = [];
+  
+  prestadores: ServicoDTO[] = [];
   pesquisaFeita: boolean = false;
 
   constructor(private apiService: ApiService) {}
@@ -30,14 +31,23 @@ export class BuscaServicosComponent {
 
     // Dispara a requisição limpa para o Back-end
     this.apiService.buscarServicos(termoLimpo, bairroLimpo).subscribe({
-      next: (dados: any[]) => { 
+      next: (dados: ServicoDTO[]) => { // 🔄 tipado corretamente
         this.prestadores = dados;
         this.pesquisaFeita = true;
         console.log('Resultados encontrados no Java:', dados);
+
+        // Exemplo: acessar dados tipados
+        dados.forEach(servico => {
+          console.log(`Categoria: ${servico.categoria}, Bairro: ${servico.bairro}`);
+          if (servico.usuario) {
+            console.log(`Prestador: ${servico.usuario.nome}`);
+          }
+        });
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error('Erro ao conectar com o servidor backend:', err);
       }
     });
   }
 }
+
