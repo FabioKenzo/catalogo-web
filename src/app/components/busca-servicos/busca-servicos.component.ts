@@ -31,7 +31,7 @@ export class BuscaServicosComponent {
 
     // Dispara a requisição limpa para o Back-end
     this.apiService.buscarServicos(termoLimpo, bairroLimpo).subscribe({
-      next: (dados: ServicoDTO[]) => { // 🔄 tipado corretamente
+      next: (dados: ServicoDTO[]) => {
         this.prestadores = dados;
         this.pesquisaFeita = true;
         console.log('Resultados encontrados no Java:', dados);
@@ -39,8 +39,8 @@ export class BuscaServicosComponent {
         // Exemplo: acessar dados tipados
         dados.forEach(servico => {
           console.log(`Categoria: ${servico.categoria}, Bairro: ${servico.bairro}`);
-          if (servico.usuario) {
-            console.log(`Prestador: ${servico.usuario.nome}`);
+          if (servico.usuarios) {
+            console.log(`Prestador: ${servico.usuarios.nome}`);
           }
         });
       },

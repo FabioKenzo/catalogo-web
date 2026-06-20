@@ -2,22 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-
-
-export interface UsuarioDTO{
+export interface UsuarioDTO {
   id: number; 
   nome: string; 
   email: string; 
   tipoPerfil: string;
 }
 
-export interface ServicoDTO{
+export interface ServicoDTO {
   id: number; 
   categoria: string; 
   bairro: string; 
   telefone: string; 
   descricao: string;
-  usuario?: UsuarioDTO;
+  usuarios?: UsuarioDTO; 
 }
 
 @Injectable({
@@ -30,7 +28,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  //ENDPOINTS DE AUTENTICAÇÃO
+  // ENDPOINTS DE AUTENTICAÇÃO
 
   cadastrarUsuario(usuario: any): Observable<UsuarioDTO> {
     return this.http.post<UsuarioDTO>(`${this.baseUrl}/auth/registrar`, usuario);
@@ -40,7 +38,7 @@ export class ApiService {
     return this.http.post<UsuarioDTO>(`${this.baseUrl}/auth/login`, dadosLogin);
   }
 
-  //ENDPOINTS DE SERVIÇOS
+  // ENDPOINTS DE SERVIÇOS
 
   // Método para persistir os dados do prestador no banco 
   salvarServico(servico: any): Observable<ServicoDTO> {
