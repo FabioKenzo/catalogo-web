@@ -12,7 +12,10 @@ import { ApiService } from '../../services/api.service';
 })
 export class PainelPrestadorComponent implements OnInit {
 
-  // DEFINIÇÃO DAS PROPRIEDADES 
+  //controla a exibicap do overlay de loading na tela
+  carregando: boolean = false;
+
+  // DEFINICAO DAS PROPRIEDADES 
   categoria: string = '';
   bairro: string = '';
   telefone: string = '';
@@ -23,7 +26,7 @@ export class PainelPrestadorComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // Recupera o ID do utilizador logado para associar ao serviço
+    //recupera o ID do utilizador logado para associar ao servico
     const usuarioLogado = localStorage.getItem('usuarioLogado');
     if (usuarioLogado) {
       const user = JSON.parse(usuarioLogado);
@@ -37,7 +40,10 @@ export class PainelPrestadorComponent implements OnInit {
       return;
     }
 
-    // Monta o objeto com os nomes das propriedades 
+    // liga o loading
+    this.carregando = true;
+
+    //monta o objeto com os nomes das propriedades 
     const dadosServico = {
       categoria: this.categoria,
       bairro: this.bairro,
@@ -46,19 +52,25 @@ export class PainelPrestadorComponent implements OnInit {
       usuarioId: this.usuarioId
     };
 
-    // Faz o envio real para o Spring 
+    // faz envio pro spring
     this.apiService.salvarServico(dadosServico).subscribe({
       next: (resposta: any) => {
+        //se der certo o loading para
+        this.carregando = false;
+
         console.log('Serviço gravado com sucesso no MySQL:', resposta);
         alert('Serviço guardado com sucesso no banco de dados!');
         
-        // Limpa o formulário após salvar
+        //limpa o formulario apos salvar
         this.categoria = '';
         this.bairro = '';
         this.telefone = '';
         this.descricao = '';
       },
       error: (err: any) => {
+        //se der erro desliga o loading para tentar novamente
+        this.carregando = false;
+
         console.error('Erro ao salvar serviço no Java:', err);
         alert('Erro ao guardar o serviço. Verifique a consola do Spring Boot.');
       }
