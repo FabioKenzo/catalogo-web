@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
 
+  carregando: boolean = false;
+
   // Objeto simples contendo apenas o que o endpoint de login pede
   dadosLogin = {
     email: '',
@@ -27,11 +29,18 @@ export class LoginComponent {
       return;
     }
 
+    //ativa o loading assim que passa na validacao 
+    this.carregando = true;
+
     console.log('Tentando realizar login...');
 
     // Chamando o método no service
     this.apiService.login(this.dadosLogin).subscribe({
       next: (usuarioLogado: UsuarioDTO) => {
+
+        //desativa o loading quando da certo o loagin 
+        this.carregando = false;
+
         console.log('Login efetuado com sucesso!');
         alert(`Bem-vindo de volta, ${usuarioLogado.nome}!`);
         
@@ -42,6 +51,10 @@ export class LoginComponent {
         this.router.navigate(['/']);
       },
       error: (err) => {
+
+        //desativa loading se der erro liberando tela de login novamente
+        this.carregando = false;
+
         console.error('Erro ao logar:', err);
         // Exibe o erro retornado pelo runtime
         alert('Erro ao autenticar: ' + (err.error || 'E-mail ou senha incorretos.'));

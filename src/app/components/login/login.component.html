@@ -38,3 +38,11 @@
     </div>
   </div>
 </div>
+
+<!--loading overlay para carregamento-->
+<div class="loading-overlay" *ngIf="carregando">
+  <div class="spinner-container">
+    <div class="custom-spinner"></div>
+    <p class="loading-text">Conectando ao servidor, por favor aguarde...</p>
+  </div>
+</div>
