@@ -10,6 +10,9 @@ export interface UsuarioDTO {
 }
 
 export interface ServicoDTO {
+nomeNegocio: any;
+categorias: any;
+whatsapp: string;
   id: number; 
   categoria: string; 
   bairro: string; 

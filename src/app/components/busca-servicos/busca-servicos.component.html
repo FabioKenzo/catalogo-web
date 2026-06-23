@@ -28,38 +28,42 @@
     </div>
   </div>
 
-  <h3 class="mb-4 text-secondary" *ngIf="prestadores.length > 0">Profissionais Encontrados:</h3>
-  
-  <div class="row row-cols-1 row-cols-md-3 g-4">
+  <h3 class="mb-4 text-secondary fw-bold" *ngIf="prestadores.length > 0">{{ tituloSecao }}:</h3>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="prestadores.length > 0">
     <div class="col" *ngFor="let prestador of prestadores">
       <div class="card h-100 shadow-sm border-0">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="badge bg-info text-dark fw-bold text-uppercase">
-              {{ prestador.categoria }}
+              {{ prestador.categorias?.nomeCategoria || prestador.categoria }}
             </span>
-            <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger"></i> {{ prestador.bairro }}</small>
+            <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger"></i> {{ prestador?.bairro }}</small>
           </div>
-          
-          <h5 class="card-title fw-bold text-dark">{{ prestador.categoria }}</h5>
-          <p class="card-text text-muted small">{{ prestador.descricao }}</p>
+
+          <h5 class="card-title fw-bold text-dark">{{ prestador.nomeNegocio || prestador.categoria }}</h5>
+          <p class="card-text text-muted small">{{ prestador?.descricao }}</p>
           <hr>
-          
+
           <p class="card-text mb-1">
-            <small class="text-muted">Profissional:</small> <strong>{{ prestador.usuarios?.nome }}</strong>
+            <small class="text-muted">Profissional:</small> 
+            <strong>{{ prestador.usuarios?.nome || 'Não informado' }}</strong>
           </p>
         </div>
-        
+
         <div class="card-footer bg-transparent border-0 pb-3">
-          <a [href]="'https://wa.me/55' + prestador.telefone" target="_blank" class="btn btn-success w-100 fw-bold">
-            <i class="bi bi-whatsapp me-2"></i> Entrar em Contato
+          <a [href]="gerarLinkWhatsApp(prestador.whatsapp || prestador.telefone, prestador.usuarios?.nome, prestador.categorias?.nomeCategoria || prestador.categoria)"
+            target="_blank"
+            class="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-whatsapp"></i> Entrar em Contato
           </a>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="alert alert-warning text-center shadow-sm" *ngIf="prestadores.length === 0">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i> Nenhum prestador listado no momento. Digite os filtros e clique em Buscar!
+  <div class="alert alert-warning text-center shadow-sm fw-bold" *ngIf="prestadores.length === 0">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    Nenhum prestador encontrado para os filtros informados. Tente buscar por outros termos!
   </div>
 </div>

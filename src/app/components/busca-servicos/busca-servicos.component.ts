@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService, ServicoDTO } from '../../services/api.service'; 
+import { ApiService, ServicoDTO } from '../../services/api.service';
 
 @Component({
   selector: 'app-busca-servicos',
@@ -10,35 +10,67 @@ import { ApiService, ServicoDTO } from '../../services/api.service';
   templateUrl: './busca-servicos.component.html',
   styleUrls: ['./busca-servicos.component.css']
 })
-export class BuscaServicosComponent {
+export class BuscaServicosComponent implements OnInit {
 
   termoBusca: string = '';
   bairroBusca: string = '';
-
-  
   prestadores: ServicoDTO[] = [];
-  pesquisaFeita: boolean = false;
+  tituloSecao: string = 'Prestadores em Destaque';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
+
+  ngOnInit(): void {
+    // Carrega os prestadores iniciais assim que a página abre
+    this.carregarPrestadoresIniciais();
+  }
+
+  // Método que o HTML chama para gerar o link do botão
+  gerarLinkWhatsApp(whatsapp: string | undefined, nome: string | undefined, categoria: string | undefined): string {
+    if (!whatsapp) return '#';
+
+    // Remove qualquer caractere que não seja número (parênteses, espaços, hífen)
+    const numeroLimpo = whatsapp.replace(/\D/g, '');
+
+    // Garante que tenha o DDI do Brasil (55) na frente se o usuário não digitou
+    const telefoneFinal = numeroLimpo.startsWith('55') ? numeroLimpo : `55${numeroLimpo}`;
+
+    const texto = `Olá ${nome || ''}, vi seu anúncio de ${categoria || 'serviços'} no Catálogo de Serviços e gostaria de solicitar um orçamento!`;
+
+    // Retorna a URL codificada para o WhatsApp web/app
+    return `https://api.whatsapp.com/send?phone=${telefoneFinal}&text=${encodeURIComponent(texto)}`;
+  }
+
+  carregarPrestadoresIniciais(): void {
+    this.apiService.buscarServicos('', '').subscribe({
+      next: (dados: ServicoDTO[]) => {
+        // CORRIGIDO: Garante e força o limite máximo de 6 elementos na Home
+        this.prestadores = dados.slice(0, 6);
+        this.tituloSecao = 'Prestadores em Destaque';
+      },
+      error: (err) => {
+        console.error('Erro ao carregar destaques iniciais:', err);
+      }
+    });
+  }
 
   pesquisar(): void {
-    // Fecha o teclado virtual do celular imediatamente
     (document.activeElement as HTMLElement)?.blur();
 
-    // Limpa os espaços invisíveis das pontas que o iOS gera
     const termoLimpo = this.termoBusca ? this.termoBusca.trim() : '';
     const bairroLimpo = this.bairroBusca ? this.bairroBusca.trim() : '';
 
-    // Dispara a requisição limpa para o Back-end
+    if (!termoLimpo && !bairroLimpo) {
+      this.carregarPrestadoresIniciais();
+      return;
+    }
+
     this.apiService.buscarServicos(termoLimpo, bairroLimpo).subscribe({
       next: (dados: ServicoDTO[]) => {
+        // Quando o usuário fizer uma busca real, trazemos todos os resultados encontrados
         this.prestadores = dados;
-        this.pesquisaFeita = true;
-        console.log('Resultados encontrados no Java:', dados);
+        this.tituloSecao = 'Profissionais Encontrados';
 
-        // Exemplo: acessar dados tipados
         dados.forEach(servico => {
-          console.log(`Categoria: ${servico.categoria}, Bairro: ${servico.bairro}`);
           if (servico.usuarios) {
             console.log(`Prestador: ${servico.usuarios.nome}`);
           }
@@ -50,4 +82,3 @@ export class BuscaServicosComponent {
     });
   }
 }
-
