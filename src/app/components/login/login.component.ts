@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService, UsuarioDTO } from '../../services/api.service';
+import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,14 +14,9 @@ import { Router } from '@angular/router';
 export class LoginComponent {
 
   carregando: boolean = false;
+  dadosLogin = { email: '', senha: '' };
 
-  // Objeto simples contendo apenas o que o endpoint de login pede
-  dadosLogin = {
-    email: '',
-    senha: ''
-  };
-
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router) { }
 
   logar(): void {
     if (!this.dadosLogin.email || !this.dadosLogin.senha) {
@@ -29,34 +24,36 @@ export class LoginComponent {
       return;
     }
 
-    //ativa o loading assim que passa na validacao 
     this.carregando = true;
 
-    console.log('Tentando realizar login...');
-
-    // Chamando o método no service
     this.apiService.login(this.dadosLogin).subscribe({
-      next: (usuarioLogado: UsuarioDTO) => {
-
-        //desativa o loading quando da certo o loagin 
+      next: (resposta: any) => {
         this.carregando = false;
+        console.log('Resposta bruta do Login do Java:', resposta);
 
-        console.log('Login efetuado com sucesso!');
-        alert(`Bem-vindo de volta, ${usuarioLogado.nome}!`);
-        
-        //guarda os dados do usuário na sessão para saber quem está logado
+        //salva o token JWT real que veio do backend
+        if (resposta && resposta.token) {
+          localStorage.setItem('token', resposta.token);
+        }
+
+        //monta o objeto incluindo o id que o java manda
+        const usuarioLogado = {
+          id: resposta.id, //captura o id do java
+          nome: resposta.nome || 'Usuário',
+          tipoPerfil: resposta.tipoPerfil || 'CONSUMIDOR'
+        };
+
+        //grava no localStorage antes de qualquer acao
         localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-        
-        // Redireciona para a home de busca
-        this.router.navigate(['/']);
+
+        alert(`Bem-vindo de volta, ${usuarioLogado.nome.split(' ')[0]}!`);
+
+        //força o recarregamento total para a navbar capturar o estado atualizado
+        window.location.href = '/';
       },
-      error: (err) => {
-
-        //desativa loading se der erro liberando tela de login novamente
+      error: (err: any) => {
         this.carregando = false;
-
         console.error('Erro ao logar:', err);
-        // Exibe o erro retornado pelo runtime
         alert('Erro ao autenticar: ' + (err.error || 'E-mail ou senha incorretos.'));
       }
     });

@@ -12,25 +12,23 @@ import { ApiService } from '../../services/api.service';
 })
 export class PainelPrestadorComponent implements OnInit {
 
-  //controla a exibicap do overlay de loading na tela
   carregando: boolean = false;
 
-  // DEFINICAO DAS PROPRIEDADES 
+  //mesmas variaveis integradas do HTML atual via ngModel
   categoria: string = '';
   bairro: string = '';
-  telefone: string = '';
+  whatsapp: string = '';
   descricao: string = '';
-  
+
   usuarioId: number | null = null;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    //recupera o ID do utilizador logado para associar ao servico
     const usuarioLogado = localStorage.getItem('usuarioLogado');
     if (usuarioLogado) {
       const user = JSON.parse(usuarioLogado);
-      this.usuarioId = user.id; 
+      this.usuarioId = user.id;
     }
   }
 
@@ -40,39 +38,55 @@ export class PainelPrestadorComponent implements OnInit {
       return;
     }
 
-    // liga o loading
     this.carregando = true;
 
-    //monta o objeto com os nomes das propriedades 
     const dadosServico = {
-      categoria: this.categoria,
-      bairro: this.bairro,
-      telefone: this.telefone,
+      nomeNegocio: this.categoria,
       descricao: this.descricao,
-      usuarioId: this.usuarioId
+      bairro: this.bairro,
+      whatsapp: this.whatsapp,
+
+      //Envia o objeto que o Java chamara em getCategorias
+      categorias: {
+        nomeCategoria: this.categoria.trim() // Envia o texto digitado
+      },
+
+      //fallbacks adicionais de seguranca para mapeamento de DTOs
+      nomeCategoria: this.categoria.trim(),
+      categoria: this.categoria.trim(),
+
+      //mapeamento do user dono do servico
+      usuarioId: this.usuarioId,
+      usuario: {
+        id: this.usuarioId
+      },
+      usuarios: {
+        id: this.usuarioId
+      }
     };
 
-    // faz envio pro spring
-    this.apiService.salvarServico(dadosServico).subscribe({
-      next: (resposta: any) => {
-        //se der certo o loading para
-        this.carregando = false;
+    console.log('Enviando objeto estruturado para o Java:', dadosServico);
 
-        console.log('Serviço gravado com sucesso no MySQL:', resposta);
+    //chama o ApiService passando o objeto adaptado
+    this.apiService.salvarComercioLivre(dadosServico).subscribe({
+      next: (resposta: any) => {
+        this.carregando = false;
+        console.log('Serviço gravado com sucesso:', resposta);
         alert('Serviço guardado com sucesso no banco de dados!');
-        
-        //limpa o formulario apos salvar
+
+        // Mantem a feature importante de limpar o formulário apos sucesso
         this.categoria = '';
         this.bairro = '';
-        this.telefone = '';
+        this.whatsapp = '';
         this.descricao = '';
       },
       error: (err: any) => {
-        //se der erro desliga o loading para tentar novamente
         this.carregando = false;
+        console.error('Erro ao salvar no Java:', err);
 
-        console.error('Erro ao salvar serviço no Java:', err);
-        alert('Erro ao guardar o serviço. Verifique a consola do Spring Boot.');
+        //exibe o erro real vindo do Java caso ainda falte alguma validacao
+        const mensagemErro = err.error || 'Não foi possível salvar os dados do seu serviço no momento.';
+        alert('Erro: ' + mensagemErro);
       }
     });
   }
