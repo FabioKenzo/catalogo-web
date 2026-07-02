@@ -72,11 +72,11 @@ export class ApiService {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
 
-    return this.http.get<any[]>(`${this.baseUrl}/comercios/buscar`, { params, headers });
+    return this.http.get<any[]>(`${this.baseUrl}/api/comercios/buscar`, { params, headers });
   }
 
   //busca id especifico
   buscarPorId(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/comercios/${id}`);
+    return this.http.get<any>(`${this.baseUrl}/api/comercios/${id}`);
   }
 }
