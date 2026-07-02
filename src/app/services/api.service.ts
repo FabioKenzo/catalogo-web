@@ -30,12 +30,12 @@ export class ApiService {
 
   //efetuar login
   login(dadosLogin: { email: string; senha: string; }): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/login`, dadosLogin);
+    return this.http.post<any>(`${this.baseUrl}/api/auth/login`, dadosLogin);
   }
 
   //cadastrar user
   cadastrarUsuario(usuario: any): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/auth/registrar`, usuario);
+  return this.http.post<any>(`${this.baseUrl}/api/auth/registrar`, usuario);
 }
 
   
