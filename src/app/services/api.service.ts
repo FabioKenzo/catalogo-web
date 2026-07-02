@@ -48,7 +48,7 @@ export class ApiService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post<any>(`${this.baseUrl}/comercios/salvar`, dadosServico, { headers });
+    return this.http.post<any>(`${this.baseUrl}/api/comercios/salvar`, dadosServico, { headers });
   }
 
   
